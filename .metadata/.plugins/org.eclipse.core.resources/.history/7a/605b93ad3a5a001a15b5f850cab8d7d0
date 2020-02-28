@@ -1,0 +1,10 @@
+
+public class WordOccurrence {
+
+	public static void main(String[] args) {
+		FileWordCount x = new FileWordCount();
+		String k;
+		k = x.fileToString("input.txt");
+	}
+
+}

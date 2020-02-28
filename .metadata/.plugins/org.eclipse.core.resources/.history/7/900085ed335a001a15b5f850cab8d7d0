@@ -1,0 +1,14 @@
+
+public class WordOccurrence {
+
+	public static void main(String[] args) {
+		
+		FileWordCount dispWordCout = new FileWordCount();
+		
+		dispWordCout.inputFileCountAndDisplay("input.txt");
+		
+		
+
+	}
+
+}

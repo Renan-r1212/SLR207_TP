@@ -1,0 +1,43 @@
+import java.io.*;
+import java.util.*;
+
+public class FileWordCount {
+	private String everything;
+	private BufferedReader br; 
+	
+	public FileWordCount() {
+		this.br = null;
+		this.everything = null;
+	}
+	
+	public String fileToString(String inputFile) {
+		try( this.br = new BufferedReader(new FileReader(inputFile))) {
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        line = br.readLine();
+		        if(line != null)
+		        	sb.append(' ');
+		    }
+		    everything = sb.toString();
+		}catch(Exception e){}
+	    
+		return everything;
+	}
+	
+	public void CountAndDisplay(String file) {
+		List<String> wordsList = new ArrayList<String>();
+		String words[];
+		String fileStr;
+		
+		fileStr = fileToString(file);			
+		words = fileStr.split(" ");
+		wordsList = Arrays.asList(words);
+		
+		for(String s: wordsList){
+			   System.out.println(s);
+			}
+	}
+}
