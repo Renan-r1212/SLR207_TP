@@ -14,7 +14,6 @@ public class FileWordCount {
 	private String fileStr,itStr;
 	private String[] words;
 	private int prevValue;
-	private Map<String, Integer> sortedWords;
 	
 
 	public FileWordCount() {
@@ -55,9 +54,8 @@ public class FileWordCount {
 				wordOcc.put(itStr, 1);		
 			}
 		}
-		sortedWords = new TreeMap<String, Integer>(wordOcc);
-		for(String key : sortedWords.keySet()) {
-			System.out.println(key + " " + sortedWords.get(key));
+		for(String key : wordOcc.keySet()) {
+			System.out.println(key + " " + wordOcc.get(key));
 		}
 	}
 }
