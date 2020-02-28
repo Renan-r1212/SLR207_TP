@@ -16,7 +16,6 @@ public class FileWordCount {
 	private String[] words;
 	private int prevValue;
 	private Map<String, Integer> sortedWords;
-	private Map<String, Integer> sortedByCount;
 	
 
 	public FileWordCount() {
@@ -43,10 +42,8 @@ public class FileWordCount {
 	}
 	
 	
-	public Map<String, Integer> sortByValue(final Map<String, Integer> wordCounts) {
-		sortedWords = new TreeMap<String, Integer>(wordCounts);
-		
-        return sortedWords.entrySet()
+	public static Map<String, Integer> sortByValue(final Map<String, Integer> wordCounts) {
+        return wordCounts.entrySet()
                 .stream()
                 .sorted((Map.Entry.<String, Integer>comparingByValue().reversed()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
@@ -67,11 +64,14 @@ public class FileWordCount {
 			}else {
 				wordOcc.put(itStr, 1);		
 			}
-		}	
-        sortedByCount = sortByValue(wordOcc);
-		
-		for(String key : sortedByCount.keySet()) {
-			System.out.println(key + " " + sortedWords.get(key));
 		}
+		sortedWords = new TreeMap<String, Integer>(wordOcc);
+		
+        final Map<String, Integer> sortedByCount = sortByValue(wordOcc);
+        System.out.println(sortedByCount);
+	/*	
+		for(String key : sortedWords.keySet()) {
+			System.out.println(key + " " + sortedWords.get(key));
+		}*/
 	}
 }

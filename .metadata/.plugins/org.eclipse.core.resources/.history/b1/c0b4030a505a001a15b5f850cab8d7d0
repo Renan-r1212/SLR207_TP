@@ -67,11 +67,14 @@ public class FileWordCount {
 			}else {
 				wordOcc.put(itStr, 1);		
 			}
-		}	
-        sortedByCount = sortByValue(wordOcc);
-		
-		for(String key : sortedByCount.keySet()) {
-			System.out.println(key + " " + sortedWords.get(key));
 		}
+
+		
+        sortedByCount = sortByValue(wordOcc);
+        System.out.println(sortedByCount);
+	/*	
+		for(String key : sortedWords.keySet()) {
+			System.out.println(key + " " + sortedWords.get(key));
+		}*/
 	}
 }
