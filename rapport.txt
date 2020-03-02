@@ -1,0 +1,93 @@
+Question 1:
+
+1.1 - The best format to use in this specific case is HashMap, since we are counting the frequency of words in a txt file
+and HashMap allow to to store a key with a given associated value.
+
+1.4 - Yes, the code worked
+
+1.5 - 5 first words and it's frequency of the file deontologie_police_nationale.txt:
+
+de 		98
+la 		51
+police 	38
+et 		36
+des 	33
+
+1.6 - 5 first words and it's frequency of the file domaine_public_fluvial.txt:
+
+de 630
+le 429
+la 370
+du 347
+et 295
+
+1.7 - 5 first words and it's frequency of the file sante_publique.txt:
+
+de 	190889
+la 	82599
+des 67813
+à 	65546
+et 	62702
+
+1.8 -
+
+Frequency count time: 752 ms
+Alphabetical sort time: 783 ms
+
+1.9 - 
+
+1.10 - 
+
+Question 2:
+
+2.1 - 
+
+Quel est le nom COURT de votre ordinateur? 
+tp-1a222-14
+
+Quel est le nom LONG de votre ordinateur? 
+tp-1a222-14.enst.fr
+
+Comment les connaître en ligne de commande ? 
+-> hostname
+-> hostname -s
+
+XXX - Sur les ordinateurs de l’école, est-il possible d’obtenir ces noms autrement qu’en ligne de commande ?
+
+2.2 - 
+
+Comment connaître les adresses IP de votre ordinateur en ligne de commande ?
+hostname -I
+
+Comment connaître les adresses (plusieurs) IP en passant par un site internet par exemple?
+nslookup [NameOfTheSite]
+
+2.3 -
+
+Comment à partir du nom d’un ordinateur, obtenir les adresses IP en ligne de commande ?
+nslookup [NomDeLaMachine]
+
+2.4 - 
+
+Comment, à partir d’une adresse IP, obtenir les noms associés en ligne de commande ?
+nslookup [IP]
+
+2.5 - 
+ping: les trois méthodes fonctionnent-elles ?
+Yes, the 3 work just fine
+
+XXX - 2.6 -
+
+2.7 - 
+
+Comment lancer un calcul en ligne de commande sur votre ordinateur (par exemple 2 + 3) ?
+echo $((compt))
+
+bc permet des calculs plus complexes, avec gestion des décimales:
+echo "1/3" |bc -l
+
+
+
+
+
+
