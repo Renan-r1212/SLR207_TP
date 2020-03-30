@@ -1,0 +1,46 @@
+package master.slave;
+
+
+import java.io.*;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class slaveError extends Thread {
+	private ProcessBuilder pb;
+	private Process process;
+	private BufferedReader reader;
+	private LinkedBlockingQueue<String> timeOutList;
+	private volatile boolean running;
+	private StringWriter sw;
+	private PrintWriter pw;
+	private String errorOut;
+
+	private String line;
+	
+	public slaveError(LinkedBlockingQueue<String> _timeOutList, Process p) {
+		reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		line = "";
+		running = true;
+		
+		process = p;
+		timeOutList = _timeOutList;
+	}
+	
+	public void terminate() {
+		running = false;
+	}
+	
+	@Override
+	public void run(){
+		try {
+			 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+		         
+		     while ((line = reader.readLine()) != null) {
+		    	 errorOut.append(line);
+		     }
+		} catch (IOException e) {
+		    e.printStackTrace();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+	}
+}

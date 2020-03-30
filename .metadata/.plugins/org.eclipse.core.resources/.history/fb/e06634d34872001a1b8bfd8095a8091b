@@ -1,0 +1,28 @@
+package master.slave;
+
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+public class master {
+
+	public static void main(String[] args) throws InterruptedException  {
+		//% java -jar slave.jar      
+		LinkedBlockingQueue<String> timeOutList = new LinkedBlockingQueue<String>();
+		
+		Thread threadSTD = new Thread();
+		Thread threadError = new Thread();
+		
+		threadSTD.start();
+		threadError.start();
+		
+		if(timeOutList.poll(5, TimeUnit.SECONDS) == null) {
+			System.out.print("TIME OUT");
+			
+			runnableSTD.terminate();
+			runnableError.terminate();
+			
+			threadSTD.join();
+			threadError.join();
+		}	
+	}
+}

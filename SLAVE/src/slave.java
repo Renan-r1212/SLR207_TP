@@ -7,7 +7,7 @@ public class slave extends Thread{
 			Thread.sleep(10000);
 		}catch(Exception e) {}
 		
-		System.out.print(3+5);
+		System.err.print(3+5);
 
 	}
 

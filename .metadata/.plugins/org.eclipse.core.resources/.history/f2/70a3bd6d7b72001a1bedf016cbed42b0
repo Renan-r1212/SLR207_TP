@@ -1,0 +1,53 @@
+package master.slave;
+
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+public class master {
+	private LinkedBlockingQueue<String> errorQueue;
+	private LinkedBlockingQueue<String> stdQueue;
+	private ProcessBuilder pb;
+	private Process process;
+	private String outSTD;
+	private String outError;
+	
+	public master(){
+		timeOutList = new LinkedBlockingQueue<String>();
+		pb = new ProcessBuilder("java", "-jar", "slave.jar");
+		process = null;
+		outSTD = null;
+		outError = null;
+	}
+	
+	public void outputReader() {
+		try {
+			process = pb.start();
+			
+			Thread threadSTD = new slaveSTD(timeOutList, process);
+			Thread threadError = new slaveError(timeOutList, process);
+			
+			threadSTD.start();	
+			threadError.start();
+			
+			if(timeOutList.poll(5, TimeUnit.SECONDS) == null) {
+				System.out.print("TIME OUT");
+				
+				threadSTD.join();
+				threadError.join();
+			}
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				timeOutList.poll(5, TimeUnit.SECONDS);
+			} catch(Exception e) {}
+		}
+	}
+	
+	public static void main(String[] args) {
+		//% java -jar slave.jar      
+	
+	}
+}

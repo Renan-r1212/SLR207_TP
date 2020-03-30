@@ -1,0 +1,13 @@
+package master.slave;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.ArrayBlockingQueue;
+
+public class slaveError implements Runnable {
+	private ProcessBuilder pb;
+	
+	
+	public void run(){}
+}

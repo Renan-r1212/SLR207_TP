@@ -1,0 +1,38 @@
+package master.slave;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class slaveSTD extends Thread {
+	private LinkedBlockingQueue<String> timeOutList;
+	private volatile boolean running;
+	private ProcessBuilder pb;
+	
+	public slaveSTD(LinkedBlockingQueue<String> _timeOutList, Process p) {
+		timeOutList = _timeOutList;
+		running = true;
+	}
+	
+	public void terminate() {
+		running = false;
+	}
+	
+	@Override
+	public void run(){
+		
+		try {
+			 pb = new ProcessBuilder("java", "-jar", "/tmp/rrodrigues/slave.jar");
+			 
+			 Process process = pb.start();
+			 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+	         String line;
+	         while ((line = reader.readLine()) != null && running) {
+	        	 timeOutList.put(line);
+	             System.out.println(line);
+	         }
+		 }catch (IOException | InterruptedException e) {}	
+	}	
+}

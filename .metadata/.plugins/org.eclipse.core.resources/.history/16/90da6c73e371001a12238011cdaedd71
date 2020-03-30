@@ -1,0 +1,34 @@
+package master.slave;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+public class master {
+
+	public static void main(String[] args) throws InterruptedException  {
+		//% java -jar slave.jar      
+		LinkedBlockingQueue<String> timeOutList = new LinkedBlockingQueue<String>();
+		
+		slaveSTD runnableSTD = new slaveSTD(timeOutList); 
+		slaveError runnableError = new slaveError(timeOutList);
+		
+		Thread threadSTD = new Thread(runnableSTD);
+		Thread threadError = new Thread(runnableError);
+		
+		threadSTD.start();
+		threadError.start();
+		
+		if(timeOutList.poll(5, TimeUnit.SECONDS) == null) {
+			System.out.print("TIME OUT");
+			
+			runnableSTD.terminate();
+			runnableError.terminate();
+			
+			threadSTD.join();
+			threadError.join();
+		}	
+	}
+}

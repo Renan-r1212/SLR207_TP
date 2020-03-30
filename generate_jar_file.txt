@@ -1,0 +1,9 @@
+ref: https://stackoverflow.com/questions/10125639/how-to-create-a-jar-file-using-the-terminal
+
+javac HelloWorld.java
+
+in Manifest.txt: Main-Class: HelloWorld
+
+jar cfm HelloWorld.jar Manifest.txt HelloWorld.class
+
+java -jar HelloWorld.jar

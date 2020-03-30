@@ -1,0 +1,39 @@
+package master.slave;
+
+import java.io.*;
+import java.util.concurrent.LinkedBlockingQueue;
+
+public class slaveSTD extends Thread {
+	private Process process;
+	private BufferedReader reader;
+	private StringBuilder strBuilder;
+	private LinkedBlockingQueue<String> timeOutList;
+	private String line;
+	
+	public slaveSTD(LinkedBlockingQueue<String> _timeOutList, Process p) {
+		process = p;
+		timeOutList = _timeOutList;
+		
+		reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		line = null;
+		strBuilder = new StringBuilder();
+	}
+
+	@Override
+	public void run(){
+		try {		 
+	         while ((line = reader.readLine()) != null) {
+		    	 strBuilder.append(line);
+		    	 strBuilder.append(System.getProperty("line.separator"));
+	         }
+		     timeOutList.put(strBuilder.toString());
+		     
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}	
+}
