@@ -68,7 +68,7 @@ public class Deploy {
 				
 				// Cria o processos para tenatar realizar a conexção remota a
 				// maquina especifica e o armazena em um Arraylist de processos
-				pb = new ProcessBuilder("ssh", "rrodrigues@" + remoteMachine, "'mkdir -p /tmp/rrodrigues'", "&& scp " + hostname +  ":/tmp/rrodrigues/Slave.jar " + remoteMachine + ":/tmp/rrodrigues/Slave.jar", "&& hostname");
+				pb = new ProcessBuilder("ssh", "rrodrigues@" + remoteMachine, "mkdir -p /tmp/rrodrigues", "&& scp " + hostname +  ":/tmp/rrodrigues/Slave.jar " + remoteMachine + ":/tmp/rrodrigues/", "&& hostname");
 				process = pb.start();
 				processesList.add(process);
 				
