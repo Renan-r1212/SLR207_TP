@@ -1,5 +1,6 @@
+package slave;
 
-public class slave extends Thread{
+public class Slave extends Thread{
 
 	public static void main(String[] args) {
 		

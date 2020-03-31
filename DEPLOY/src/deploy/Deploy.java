@@ -3,6 +3,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class Deploy {
 	private ArrayList<Thread> stdOutputThreadsList;
@@ -21,6 +23,8 @@ public class Deploy {
 	private ErrorThread errThread;
 	private String stdOutput;
 	private String errorOutput;
+	private InetAddress ip;
+	private String hostname;
 	
 	
 	public Deploy() {
@@ -29,17 +33,15 @@ public class Deploy {
 		machinesList		 	= new ArrayList<String>();
 		processesList			= new ArrayList<Process>();
 		stdOutputQueueList		= new ArrayList<LinkedBlockingQueue<String>>();
-		errorQueueList			= new ArrayList<LinkedBlockingQueue<String>>();
-		
-		errorTimeOutQueue		= null;
-		stdOutputTimeOutQueue	= null;
-		remoteMachine			= null;
-		pb						= null;
-		process					= null;
-		stdThread				= null;
-		errThread				= null;
-		stdOutput				= null;
-		errorOutput				= null;	
+		errorQueueList			= new ArrayList<LinkedBlockingQueue<String>>();			
+	
+		try {
+			ip = InetAddress.getLocalHost();
+            hostname = ip.getHostName();
+		} catch (UnknownHostException e){
+			e.printStackTrace();
+		}
+	
 	}
 	
 	/** 
@@ -57,7 +59,8 @@ public class Deploy {
 	 */
 	
 	void verifyConnection() {
-		try {
+		try {	
+			
 			read = new BufferedReader(new FileReader("machines.txt"));
 			
 			while((remoteMachine = read.readLine()) != null) {	
@@ -65,7 +68,7 @@ public class Deploy {
 				
 				// Cria o processos para tenatar realizar a conexção remota a
 				// maquina especifica e o armazena em um Arraylist de processos
-				pb = new ProcessBuilder("ssh", "rrodrigues@" + remoteMachine);
+				pb = new ProcessBuilder("ssh", "rrodrigues@" + remoteMachine, "'mkdir -p /tmp/rrodrigues'", "&& scp " + hostname +  ":/tmp/rrodrigues/Slave.jar " + remoteMachine + ":/tmp/rrodrigues/Slave.jar", "&& hostname");
 				process = pb.start();
 				processesList.add(process);
 				
@@ -90,7 +93,7 @@ public class Deploy {
 				errorOutput = errorQueueList.get(i).poll(5, TimeUnit.SECONDS);
 				
 				if(stdOutput == null && errorOutput == null) {
-					System.out.print("Process " + i + ": TIME OUT");
+					System.out.print("Machine - " + machinesList.get(i) + ": TIME OUT");
 					
 					((StdOutputThread) stdOutputThreadsList.get(i)).terminate();
 					((StdOutputThread) errorThreadsList.get(i)).terminate();
@@ -99,10 +102,10 @@ public class Deploy {
 					errorThreadsList.get(i).join();
 					
 					process.destroy();
-				} else if(stdOutput != null && errorOutput == null) {
-					System.out.println("Process " + i + ":\n\n" + stdOutput + "\n");
+				} else if(stdOutput != null && stdOutput != "") {
+					System.out.println("Machine - " + machinesList.get(i) + ": Output\n\n" + stdOutput + "\n");
 				} else {
-					System.err.println("Process " + i + ":\n\n" + errorOutput + "\n");
+					System.out.println("Machine - " + machinesList.get(i) + ": Error\n\n" + stdOutput + "\n");
 				}
 			}
 			
