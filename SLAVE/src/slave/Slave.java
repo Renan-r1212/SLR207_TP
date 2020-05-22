@@ -3,7 +3,6 @@ package slave;
  * 2. excutar a criação dos UMx.txt
  * 3. criar maps em outras maquinas e enviar UMx.txt(iterar sobre Sx para saber x correto) 
  */
-import handoopMapReduce.FileWordCount;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -17,7 +16,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 public class Slave {
-	private FileWordCount splitLineAcq;
 	private ArrayList<String> machinesList;
 	private List<String> wordsList;
 	private ListIterator<String> wordIt;
@@ -25,58 +23,75 @@ public class Slave {
 	private Process process;
 	private Integer splitNum;
 	private String remoteMachine;
-	private InetAddress ip;
-	private String hostname;
+
 	 
 	public Slave() {
-		splitLineAcq = new FileWordCount();
 		wordsList	 = new ArrayList<String>();
 		machinesList = new ArrayList<String>();
 		process = null;
 		splitNum = Integer.valueOf(0);
 		
-		try {
-			ip = InetAddress.getLocalHost();
-            hostname = ip.getHostName();
-		} catch (UnknownHostException e){
-			e.printStackTrace();
-		}
 	}
 	
+	/* FileToString takes as argument a string with the path name
+	 * of a file and return it's lines with a space between each
+	 * line.
+	 * @param file: String
+	 * 
+	 * */
 	
-	public void deploySplits() {
+	public String fileToString(String file) {
+		String everything = null;
+		try{
+			BufferedReader br = new BufferedReader(new FileReader(file));
+		    StringBuilder sb = new StringBuilder();
+		    String line = br.readLine();
+
+		    while (line != null) {
+		        sb.append(line);
+		        line = br.readLine();
+		        if(line != null)
+		        	sb.append(' ');
+		    }
+		    
+		    return everything = sb.toString();
+		}catch(Exception e){}
+		return everything = null;
+	}
+	
+	public void deployMapDir() {
+		System.out.println("Deploying maps directorys");
 		try {
-			int splitFileNum = 0;
 			BufferedReader read;
 			read = new BufferedReader(new FileReader("machines.txt"));
 			while((remoteMachine = read.readLine()) != null) {	
 				machinesList.add(remoteMachine);
 				
 				pb = new ProcessBuilder("ssh", "rrodrigues@" + remoteMachine, "mkdir -p /tmp/rrodrigues/maps",
-										"&& scp " + hostname +  ":/tmp/rrodrigues/splits/S"+ splitFileNum + ".txt", remoteMachine + ":/tmp/rrodrigues/splits/",
 										"&& hostname");	
+				pb.inheritIO(); 
 				process = pb.start();
-				splitFileNum++;
+				process.waitFor(); 
 			}
-			System.out.println("Splits deployed");
+			System.out.println("Map Directorys deployed");
 			read.close();
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			System.out.println("Maps directorys deployed");
 		}
 	}
-	
-	
 	
 	public List<String> wordsExtract(String file) {
 		String splitLine;
 		String[] words; 
 		
-		splitNum = Integer.parseInt(file.charAt(18) + "");
+		splitNum = Integer.parseInt(file.charAt(1) + "");
 		
-		splitLine = splitLineAcq.fileToString(file);
+		splitLine = fileToString("splits/" + file);
 		words = splitLine.split(" ");
 		
 		return wordsList = Arrays.asList(words);
@@ -112,20 +127,28 @@ public class Slave {
         }finally{
             
             try{
-                //always close the writer
                 bf.close();
             }catch(Exception e){}
         }
 	}
 	
+	public void map(String fileName) {
+		System.out.print("Mapping...");
+		deployMapDir();
+		saveMap(mapList(wordsExtract(fileName)));
+		System.out.print("Map completed");
+	}
+
+	
 	public static void main(String[] args) {
 		
-		Slave slv = new Slave();
-		List<String> output = new ArrayList<String>();
-		
-		output = slv.mapList(slv.wordsExtract("/tmp/rrodrigues/splits/S0.txt"));
-		System.out.print(output);
-		
-		slv.saveMap(output);		
+		int N = args.length;
+		if (N < 2) {
+			System.err.println("No arguments");
+		} else if (args[0] == "map") {
+				Slave s = new Slave();
+				s.map(args[1]);
+			}
+			
 	}
 }
