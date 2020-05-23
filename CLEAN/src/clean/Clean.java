@@ -52,7 +52,7 @@ public class Clean {
 	void verifyConnection() {
 		try {	
 			
-			read = new BufferedReader(new FileReader("machines.txt"));
+			read = new BufferedReader(new FileReader("../machines.txt"));
 			
 			while((remoteMachine = read.readLine()) != null) {	
 				machinesList.add(remoteMachine);

@@ -61,14 +61,16 @@ public class Deploy {
 	void verifyConnection() {
 		try {	
 			
-			read = new BufferedReader(new FileReader("machines.txt"));
+			read = new BufferedReader(new FileReader("../machines.txt"));
 			
 			while((remoteMachine = read.readLine()) != null) {	
 				machinesList.add(remoteMachine);
 				
 				// Cria o processos para tenatar realizar a conexção remota a
 				// maquina especifica e o armazena em um Arraylist de processos
-				pb = new ProcessBuilder("ssh", "rrodrigues@" + remoteMachine, "mkdir -p /tmp/rrodrigues", "&& scp " + hostname +  ":/tmp/rrodrigues/Slave.jar " + remoteMachine + ":/tmp/rrodrigues/", "&& hostname");
+				pb = new ProcessBuilder("ssh", "rrodrigues@" + remoteMachine, "mkdir -p /tmp/rrodrigues", 
+										"&& scp " + hostname +  ":/tmp/rrodrigues/Slave.jar " + remoteMachine + ":/tmp/rrodrigues/", 
+										"&& hostname");
 				process = pb.start();
 				processesList.add(process);
 				
